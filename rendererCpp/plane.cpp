@@ -31,7 +31,7 @@ plane::plane(const plane &p):
 {
 }
 
-bool plane::hit(rayHitInfo &info)
+void plane::hit(rayHitInfo &info)
 {
 	//jeœli ray nadchodzi od strony po której jest normalka, to k¹t miêdzy direction a normal wyniesie ponad 180 stopni
 	//dlatego zwracam odwrotn¹ normalkê - choæby by przesun¹æ punkt cieniowania do obserwatora a nie od niego
@@ -46,9 +46,7 @@ bool plane::hit(rayHitInfo &info)
 
 			if (normalDotIncomingRay > 0) info.setHit(t, -normal, materialToUse, intersection);
 			else info.setHit(t, normal, materialToUse, intersection);
-			return true;
 		}
 	}
 	//ray i wektor s¹ rownolegle
-	return false;
 }

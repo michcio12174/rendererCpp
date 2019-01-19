@@ -21,7 +21,7 @@ public:
 		C(C),
 		color(color) {}
 
-	bool hit(rayHitInfo &info);
+	void hit(rayHitInfo &info);
 
 	vertex B;
 	vertex C;

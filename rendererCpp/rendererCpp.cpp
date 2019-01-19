@@ -49,7 +49,7 @@ void matrixAlgebraTest();
 
 //zmienne dla œwiata
 int width = 800, height = 600;
-ambientLight ambientL(vector3(1, 1, 1), 0.05f);
+ambientLight ambientL(vector3(1, 1, 1), 0.1f);
 //world
 world worldOne(ambientL);
 

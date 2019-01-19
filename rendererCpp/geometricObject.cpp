@@ -5,11 +5,6 @@ geometricObject::geometricObject()
 {
 }
 
-bool geometricObject::hit(rayHitInfo &info)
-{
-	return false;
-}
-
 void geometricObject::setMaterial(material *materialToSet)
 {
 	materialToUse = materialToSet;

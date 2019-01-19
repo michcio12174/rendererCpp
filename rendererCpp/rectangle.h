@@ -6,7 +6,7 @@ class rectangle :
 public:
 	rectangle(vector3 leftUpperCorner, float width, float height, material *materialToUse);
 
-	bool hit(rayHitInfo &info);
+	void hit(rayHitInfo &info);
 
 private:
 	float width, height;

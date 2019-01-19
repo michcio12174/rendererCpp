@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "triangle.h"
 
-bool triangle::hit(rayHitInfo &info)
+void triangle::hit(rayHitInfo &info)
 {
+	plane::hit(info);
 	//sprawdzam czy promieñ przecina p³aszczyznê, na której le¿y trójk¹t
-	if (plane::hit(info))
+	if (info.hitOccured)
 	{
 		//plane ustawi³a, ¿e by³o z ni¹ przeciêcie, ale to nie znaczy, ¿e przeciêliœmy trójk¹t
 		info.hitOccured = false;
@@ -27,12 +28,12 @@ bool triangle::hit(rayHitInfo &info)
 			(DB.cross(DC)).dot(normal) >= info.minIntersectionDistance &&
 			(DC.cross(DA)).dot(normal) >= info.minIntersectionDistance)
 			info.hitOccured = true;
+			
 
 		//i z odwrócon¹ normalk¹
 		if ((DA.cross(DB)).dot(-normal) >= info.minIntersectionDistance &&
 			(DB.cross(DC)).dot(-normal) >= info.minIntersectionDistance &&
 			(DC.cross(DA)).dot(-normal) >= info.minIntersectionDistance)
-			info.hitOccured = true;
+			info.hitOccured = true; 
 	}
-	return false;
 }

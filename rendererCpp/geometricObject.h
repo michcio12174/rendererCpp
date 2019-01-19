@@ -5,7 +5,7 @@ class geometricObject
 {
 public:
 	geometricObject();
-	virtual bool hit(rayHitInfo &info);
+	virtual void hit(rayHitInfo &info) {}
 	void setMaterial(material *materialToSet);
 	material* getMaterial();
 protected:

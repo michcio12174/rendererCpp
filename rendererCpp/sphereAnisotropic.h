@@ -9,7 +9,7 @@ public:
 	sphereAnisotropic(vector3 origin, float radius, material *materialToUse, vector3 anisotropyVector);
 	sphereAnisotropic(const sphereAnisotropic &sphere);
 
-	bool hit(rayHitInfo &info);
+	void hit(rayHitInfo &info);
 
 private:
 	vector3 anisotropyVector;

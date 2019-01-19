@@ -9,7 +9,7 @@ rectangle::rectangle(vector3 leftUpperCorner, float width, float height, materia
 	this->height = height;
 }
 
-bool rectangle::hit(rayHitInfo & info)
+void rectangle::hit(rayHitInfo & info)
 {
 	plane::hit(info);
 	if (info.hitOccured) {
@@ -23,13 +23,9 @@ bool rectangle::hit(rayHitInfo & info)
 			
 			info.hitPoint.x = (A.position - point1).length() / width;
 			info.hitPoint.y = (A.position - point2).length() / height;
-
-			return true;
 		}
 		else {
 			info.hitOccured = false;
 		}
 	}
-
-	return false;
 }

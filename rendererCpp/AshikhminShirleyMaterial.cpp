@@ -61,11 +61,10 @@ AshikhminShirleyMaterial::AshikhminShirleyMaterial(texture * diffuseTexture, tex
 
 vector3 AshikhminShirleyMaterial::shade(rayHitInfo & info)
 {
-	ray rayToLightSource;
-
+	//cout << diffuseTexture->getColor(info.hitPoint).toString() << endl;
 	//get color from ambient light
-	vector3 pixelColor(info.worldToRender->getAmbientLight()*diffuseTexture->getColor(info.hitPoint));
-
+	vector3 pixelColor(info.worldToRender->getAmbientLight() * diffuseTexture->getColor(info.hitPoint));
+	//cout << pixelColor.toString() << endl;
 	//variables for use inside loop
 	vector3 intersectionPoint;
 	vector3 directionToLight;
@@ -73,19 +72,21 @@ vector3 AshikhminShirleyMaterial::shade(rayHitInfo & info)
 	//liczê dla ka¿dego œwiat³a w œwiecie
 	for (int i = 0; i < info.worldToRender->lightsInTheScene.size(); ++i) {
 		//find ray to light surce
-		intersectionPoint = info.globalHitPoint() + info.normal*material::shadowBias;
+		intersectionPoint = info.globalHitPoint() + info.normal * material::shadowBias;
 		directionToLight = info.worldToRender->lightsInTheScene[i]->getVectorToLight(intersectionPoint);
 		rayHitInfo shadowRayInfo(ray(intersectionPoint, directionToLight), info.worldToRender);
 
 		//trace ray to see if it hits light source
 		multipleObjectsTracer::traceShadowRay(shadowRayInfo, info.worldToRender->lightsInTheScene[i]);
 		
-		//if intercestion is not in shadow also get color from specular and diffuse shading
+		//if intersection is not in shadow also get color from specular and diffuse shading
 		if (!shadowRayInfo.hitOccured) {
 			pixelColor += diffuseComponent(info, directionToLight, info.worldToRender->lightsInTheScene[i]) * diffuseCoeff
 				+ specularComponent(info, directionToLight, info.worldToRender->lightsInTheScene[i]) * specularCoeff;
 		}
 	}
+	//cout << pixelColor.toString() << endl;
+
 	return pixelColor;
 }
 

@@ -11,7 +11,7 @@ public:
 	plane(vertex point1); 
 	plane(const plane &p);
 
-	bool hit(rayHitInfo &info);
+	void hit(rayHitInfo &info);
 
 	//vertex insted vector3 used becouse triangle inheryts from this class and needs this point to be a vertex
 	vertex A;
