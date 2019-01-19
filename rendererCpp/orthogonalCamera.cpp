@@ -2,7 +2,8 @@
 #include "orthogonalCamera.h"
 #include "multipleObjectsTracer.h"
 
-orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, float zoom, world *worldToRender)
+orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, float zoom, world *worldToRender):
+	aaSamplesDistance(1.5f)
 {
 	//----------obliczam bazê ortonormaln¹ dla kamery
 	computeUVW(planeCenter, lookat, vector3(0, 1, 0, false));
@@ -13,9 +14,11 @@ orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, float zo
 	this->width = 800;
 	this->height = 600;
 	this->pixelSize = 1 / zoom;
+
 }
 
-orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, vector3 up, float zoom, world *worldToRender)
+orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, vector3 up, float zoom, world *worldToRender):
+	aaSamplesDistance(1.5f)
 {
 	//----------obliczam bazê ortonormaln¹ dla kamery
 	computeUVW(planeCenter, lookat, up);
@@ -52,7 +55,7 @@ CImg<unsigned char> orthogonalCamera::renderImage()
 			vector3 returnedColor = antiAliase(
 				pixelSize*(width * 0.5f - i + 0.5f),       //x
 				pixelSize*(height * 0.5f - j - 0.5f),      //y
-				0, pixelSize);
+				pixelSize * aaSamplesDistance);
 
 			returnedColor.toEightBit();
 			renderedImage(i, j, 0) = returnedColor.r;
@@ -63,46 +66,45 @@ CImg<unsigned char> orthogonalCamera::renderImage()
 	return renderedImage;
 }
 
-vector3 orthogonalCamera::antiAliase(float const &x, float const &y, int const &iteration, float squareSize)
+vector3 orthogonalCamera::antiAliase(float const &x, float const &y, float squareSize)
 {
-	squareSize = squareSize / 2;
+	float squareSizeHalf = squareSize / 2;
 
 	ray centerRay(vector3(x, y, 0, false), vector3(0, 0, 1, false)), AARay;
 	rayHitInfo info(rayToGlobal(centerRay), worldToRender);
 	vector3 centerColor = multipleObjectsTracer::traceRay(info);
 
-	vector3 colors[4];
-	for (int i = 0; i < 4; ++i) {
-		AARay = centerRay;
+	if (squareSize >= pixelSize) {
+		vector3 colors[4];
+		for (int i = 0; i < 4; ++i) {
+			AARay = centerRay;
 
-		switch (i){
-		case 0:
-			AARay.origin.x -= squareSize;
-			AARay.origin.y -= squareSize;
-			break;
-		case 1:
-			AARay.origin.x += squareSize;
-			AARay.origin.y -= squareSize;
-			break; 
-		case 2:
-			AARay.origin.x -= squareSize;
-			AARay.origin.y += squareSize;
-			break; 
-		case 3:
-			AARay.origin.x += squareSize;
-			AARay.origin.y += squareSize;
-			break;
+			switch (i) {
+			case 0:
+				AARay.origin.x -= squareSizeHalf;
+				AARay.origin.y -= squareSizeHalf;
+				break;
+			case 1:
+				AARay.origin.x += squareSizeHalf;
+				AARay.origin.y -= squareSizeHalf;
+				break;
+			case 2:
+				AARay.origin.x -= squareSizeHalf;
+				AARay.origin.y += squareSizeHalf;
+				break;
+			case 3:
+				AARay.origin.x += squareSizeHalf;
+				AARay.origin.y += squareSizeHalf;
+				break;
+			}
+			info = rayHitInfo(rayToGlobal(AARay), worldToRender);
+			colors[i] = multipleObjectsTracer::traceRay(info);
 		}
-		info = rayHitInfo(rayToGlobal(AARay), worldToRender);
-		colors[i] = multipleObjectsTracer::traceRay(info);
-		if (iteration < worldToRender->maxAntialiasingIterations && centerColor.distanceSquare(colors[i]) >= worldToRender->minColorDistanceSquare) {
-			antiAliase(AARay.origin.x, AARay.origin.y, iteration + 1, squareSize);
-		}
+
+		centerColor.r = (colors[0].r + colors[1].r + colors[2].r + colors[3].r) * 0.25f;
+		centerColor.g = (colors[0].g + colors[1].g + colors[2].g + colors[3].g) * 0.25f;
+		centerColor.b = (colors[0].b + colors[1].b + colors[2].b + colors[3].b) * 0.25f;
 	}
-	
-	centerColor.r = (colors[0].r + colors[1].r + colors[2].r + colors[3].r) * 0.25f;
-	centerColor.g = (colors[0].g + colors[1].g + colors[2].g + colors[3].g) * 0.25f;
-	centerColor.b = (colors[0].b + colors[1].b + colors[2].b + colors[3].b) * 0.25f;
 
 	return centerColor;
 }

@@ -12,13 +12,14 @@ public:
 	virtual CImg<unsigned char> renderImage();
 
 protected:
+	float aaSamplesDistance;
 	int width, height;
 	float pixelSize;
 	vector3 u, v, w, up;
 	vector3 planeCenter, lookat;
 	world* worldToRender;
 
-	virtual vector3 antiAliase(float const &x, float const &y, int const &iteration, float squareSize);
+	virtual vector3 antiAliase(float const &x, float const &y, float squareSize);
 	ray rayToGlobal(ray localRay);
 	void computeUVW(vector3 &planeCenter, vector3 &lookat, vector3 &up);
 };

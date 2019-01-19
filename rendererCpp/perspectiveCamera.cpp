@@ -16,49 +16,47 @@ perspectiveCamera::perspectiveCamera(vector3 planeCenter, vector3 lookat, vector
 
 //metoda bierze wspó³rzêdne x oraz y na p³aszczyŸnie widzenia, przez które przejdzie centralny promieñ
 //promienie nie s¹ równoleg³e, dlatego trzeba tworzyæ nowe z przesuniêtym punktem pocz¹tkowym
-vector3 perspectiveCamera::antiAliase(float const &x, float const &y, int const &iteration, float squareSize)
+vector3 perspectiveCamera::antiAliase(float const &x, float const &y, float squareSize)
 {
-	squareSize = squareSize / 2;
+	float squareSizeHalf = squareSize / 2;
 
 	ray centerRay = constructPerspectiveRay(x, y);
 	rayHitInfo info(rayToGlobal(centerRay), worldToRender);
 	vector3 centerColor = multipleObjectsTracer::traceRay(info);
 
-	vector3 colors[4];
-	float tempx, tempy;
-	for (int i = 0; i < 4; ++i) {
-		tempx = centerRay.origin.x;
-		tempy = centerRay.origin.y;
+	if (squareSize >= pixelSize) {
+		vector3 colors[4];
+		float tempx, tempy;
+		for (int i = 0; i < 4; ++i) {
+			tempx = centerRay.origin.x;
+			tempy = centerRay.origin.y;
 
-		switch (i) {
-		case 0:
-			tempx = x - squareSize;
-			tempy = y - squareSize;
-			break;
-		case 1:
-			tempx = x + squareSize;
-			tempy = y - squareSize;
-			break;
-		case 2:
-			tempx = x - squareSize;
-			tempy = y + squareSize;
-			break;
-		case 3:
-			tempx = x + squareSize;
-			tempy = y + squareSize;
-			break;
+			switch (i) {
+			case 0:
+				tempx = x - squareSizeHalf;
+				tempy = y - squareSizeHalf;
+				break;
+			case 1:
+				tempx = x + squareSizeHalf;
+				tempy = y - squareSizeHalf;
+				break;
+			case 2:
+				tempx = x - squareSizeHalf;
+				tempy = y + squareSizeHalf;
+				break;
+			case 3:
+				tempx = x + squareSizeHalf;
+				tempy = y + squareSizeHalf;
+				break;
+			}
+			info = rayHitInfo(rayToGlobal(constructPerspectiveRay(tempx, tempy)), worldToRender);
+			colors[i] = multipleObjectsTracer::traceRay(info);
 		}
-		info = rayHitInfo(rayToGlobal(constructPerspectiveRay(tempx, tempy)), worldToRender);
-		colors[i] = multipleObjectsTracer::traceRay(info);
 
-		//jeœl ró¿nica miêdzy centrum, a skrajem jest wiêksza ni¿ w wypadku ustalonego progu, dokonujemy aliasingu na æwiartce
-		if (iteration < worldToRender->maxAntialiasingIterations && centerColor.distanceSquare(colors[i]) >= worldToRender->minColorDistanceSquare) 
-			antiAliase(tempx, tempy, iteration + 1, squareSize);
+		centerColor.r = (colors[0].r + colors[1].r + colors[2].r + colors[3].r) * 0.25f;
+		centerColor.g = (colors[0].g + colors[1].g + colors[2].g + colors[3].g) * 0.25f;
+		centerColor.b = (colors[0].b + colors[1].b + colors[2].b + colors[3].b) * 0.25f;
 	}
-
-	centerColor.r = (colors[0].r + colors[1].r + colors[2].r + colors[3].r) * 0.25f;
-	centerColor.g = (colors[0].g + colors[1].g + colors[2].g + colors[3].g) * 0.25f;
-	centerColor.b = (colors[0].b + colors[1].b + colors[2].b + colors[3].b) * 0.25f;
 
 	return centerColor;
 }

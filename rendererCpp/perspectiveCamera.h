@@ -11,6 +11,6 @@ protected:
 	float d;
 	vector3 eyePoint;
 	ray constructPerspectiveRay(float const &x, float const &y);
-	vector3 antiAliase(float const &x, float const &y, int const &iteration, float squareSize);
+	vector3 antiAliase(float const &x, float const &y, float squareSize);
 };
 

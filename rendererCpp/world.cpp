@@ -3,24 +3,12 @@
 
 world::world()
 {
-	this->minColorDistanceSquare = 1;
-	this->maxAntialiasingIterations = 3;
 	this->currentAmbientLight = ambientLight(vector3(1, 1, 1), 0.1f);
 	indexOfRefraction = 1;
 }
 
-world::world(int maxAntialiasingIterations, int minColorDistance)
+world::world(ambientLight ambientToSet)
 {
-	this->minColorDistanceSquare = minColorDistance*minColorDistance;
-	this->maxAntialiasingIterations = maxAntialiasingIterations;
-	this->currentAmbientLight = ambientLight(vector3(1, 1, 1), 0.1f);
-	indexOfRefraction = 1;
-}
-
-world::world(int maxAntialiasingIterations, int minColorDistance, ambientLight ambientToSet)
-{
-	this->minColorDistanceSquare = minColorDistance*minColorDistance;
-	this->maxAntialiasingIterations = maxAntialiasingIterations;
 	this->currentAmbientLight = ambientLight(ambientToSet);
 	indexOfRefraction = 1;
 }

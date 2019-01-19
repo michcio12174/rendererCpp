@@ -46,15 +46,12 @@ void task6();
 void projekt();
 //funkcje testuj¹ce rasteryzer
 void matrixAlgebraTest();
-void savingTGA();
 
 //zmienne dla œwiata
 int width = 800, height = 600;
-int maxAntialiasingIterations = 2;
-int minColorDistanse = 50;
 ambientLight ambientL(vector3(1, 1, 1), 0.05f);
 //world
-world worldOne(maxAntialiasingIterations, minColorDistanse, ambientL);
+world worldOne(ambientL);
 
 //dane dla kamer
 float zoom = 3.6f;
