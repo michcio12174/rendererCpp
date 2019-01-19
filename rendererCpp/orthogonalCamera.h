@@ -12,7 +12,6 @@ public:
 	virtual CImg<unsigned char> renderImage();
 
 protected:
-	float aaSamplesDistance;
 	int width, height;
 	float pixelSize;
 	vector3 u, v, w, up;

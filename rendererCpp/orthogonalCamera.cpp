@@ -2,8 +2,7 @@
 #include "orthogonalCamera.h"
 #include "multipleObjectsTracer.h"
 
-orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, float zoom, world *worldToRender):
-	aaSamplesDistance(1.5f)
+orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, float zoom, world *worldToRender)
 {
 	//----------obliczam bazê ortonormaln¹ dla kamery
 	computeUVW(planeCenter, lookat, vector3(0, 1, 0, false));
@@ -17,8 +16,7 @@ orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, float zo
 
 }
 
-orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, vector3 up, float zoom, world *worldToRender):
-	aaSamplesDistance(1.5f)
+orthogonalCamera::orthogonalCamera(vector3 planeCenter, vector3 lookat, vector3 up, float zoom, world *worldToRender)
 {
 	//----------obliczam bazê ortonormaln¹ dla kamery
 	computeUVW(planeCenter, lookat, up);
@@ -55,7 +53,7 @@ CImg<unsigned char> orthogonalCamera::renderImage()
 			vector3 returnedColor = antiAliase(
 				pixelSize*(width * 0.5f - i + 0.5f),       //x
 				pixelSize*(height * 0.5f - j - 0.5f),      //y
-				pixelSize * aaSamplesDistance);
+				pixelSize);
 
 			returnedColor.toEightBit();
 			renderedImage(i, j, 0) = returnedColor.r;
