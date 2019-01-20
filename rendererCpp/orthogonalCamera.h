@@ -19,7 +19,7 @@ protected:
 	world* worldToRender;
 
 	virtual vector3 antiAliase(float const &x, float const &y, float squareSize);
-	ray rayToGlobal(ray localRay);
+	ray rayToGlobal(ray &localRay);
 	void computeUVW(vector3 &planeCenter, vector3 &lookat, vector3 &up);
 };
 

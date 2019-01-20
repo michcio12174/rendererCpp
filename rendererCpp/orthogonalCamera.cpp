@@ -66,48 +66,46 @@ CImg<unsigned char> orthogonalCamera::renderImage()
 
 vector3 orthogonalCamera::antiAliase(float const &x, float const &y, float squareSize)
 {
-	float squareSizeHalf = squareSize / 2;
+	squareSize *= 0.5;
 
 	ray centerRay(vector3(x, y, 0, false), vector3(0, 0, 1, false)), AARay;
 	rayHitInfo info(rayToGlobal(centerRay), worldToRender);
 	vector3 centerColor = multipleObjectsTracer::traceRay(info);
 
-	if (squareSize >= pixelSize) {
-		vector3 colors[4];
-		for (int i = 0; i < 4; ++i) {
-			AARay = centerRay;
+	vector3 colors[4];
+	for (int i = 0; i < 4; ++i) {
+		AARay = centerRay;
 
-			switch (i) {
-			case 0:
-				AARay.origin.x -= squareSizeHalf;
-				AARay.origin.y -= squareSizeHalf;
-				break;
-			case 1:
-				AARay.origin.x += squareSizeHalf;
-				AARay.origin.y -= squareSizeHalf;
-				break;
-			case 2:
-				AARay.origin.x -= squareSizeHalf;
-				AARay.origin.y += squareSizeHalf;
-				break;
-			case 3:
-				AARay.origin.x += squareSizeHalf;
-				AARay.origin.y += squareSizeHalf;
-				break;
-			}
-			info = rayHitInfo(rayToGlobal(AARay), worldToRender);
-			colors[i] = multipleObjectsTracer::traceRay(info);
+		switch (i) {
+		case 0:
+			AARay.origin.x -= squareSize;
+			AARay.origin.y -= squareSize;
+			break;
+		case 1:
+			AARay.origin.x += squareSize;
+			AARay.origin.y -= squareSize;
+			break;
+		case 2:
+			AARay.origin.x -= squareSize;
+			AARay.origin.y += squareSize;
+			break;
+		case 3:
+			AARay.origin.x += squareSize;
+			AARay.origin.y += squareSize;
+			break;
 		}
-
-		centerColor.r = (colors[0].r + colors[1].r + colors[2].r + colors[3].r) * 0.25f;
-		centerColor.g = (colors[0].g + colors[1].g + colors[2].g + colors[3].g) * 0.25f;
-		centerColor.b = (colors[0].b + colors[1].b + colors[2].b + colors[3].b) * 0.25f;
+		info = rayHitInfo(rayToGlobal(AARay), worldToRender);
+		colors[i] = multipleObjectsTracer::traceRay(info);
 	}
+
+	centerColor.r = (colors[0].r + colors[1].r + colors[2].r + colors[3].r) * 0.25f;
+	centerColor.g = (colors[0].g + colors[1].g + colors[2].g + colors[3].g) * 0.25f;
+	centerColor.b = (colors[0].b + colors[1].b + colors[2].b + colors[3].b) * 0.25f;
 
 	return centerColor;
 }
 
-ray orthogonalCamera::rayToGlobal(ray localRay) {
+ray orthogonalCamera::rayToGlobal(ray &localRay) {
 	//aby przekonwertowaæ punkt do przestrzeni globalnej potrzebujemy pomno¿æ go przez bazê ortonormaln¹ 
 	//a potem dodaæ lokalizacjê pocz¹tku lokalnego uk³au we wspó³rzêdnych globalnych
 	localRay.origin = (u*localRay.origin.x + v * localRay.origin.y + w * localRay.origin.z) + planeCenter;

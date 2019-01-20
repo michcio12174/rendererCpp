@@ -30,12 +30,11 @@ void multipleObjectsTracer::traceShadowRay(rayHitInfo & info, light *lightToUse)
 	if (info.worldToRender) {
 		//if a light is a point light, we check if there was a hit between light origin and shaded point
 		if (lightToUse->isPointLight) {
-			float distanceToLightSource = (lightToUse->origin - info.incomingRay.origin).x / info.incomingRay.direction.x;
-			//wychodzimy z pêtli od tazu kiedy by³o przeciêcie, nie trzeba sprawdzaæ innych obiektów
+			float distanceToLightSource = (lightToUse->origin.x - info.incomingRay.origin.x) / info.incomingRay.direction.x;
 			for (int i = 0; i < size; ++i) {
 				info.worldToRender->objectsInTheScene[i]->hit(temp);
-				//we change info only if hit in temp is between light source and shadow ray origin
-				if (temp.hitOccured && temp.t < distanceToLightSource){
+				//wychodzimy z pêtli od tazu kiedy by³o przeciêcie, nie trzeba sprawdzaæ innych obiektów
+				if (temp.hitOccured && temp.t < distanceToLightSource) {
 					info = temp;
 					return;
 				}

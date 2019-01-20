@@ -95,6 +95,10 @@ void stopTimer() {
 	duration<float> duration = t2 - t1;
 	cout << "render time: " << duration.count() << endl;
 	cout << "FPS: " << 1 / duration.count() << endl;
+
+	/*ofstream myfile;
+	myfile.open("../fps.txt", std::ios_base::app);
+	myfile << 1 / duration.count() << endl;*/
 }
 
 void matrixAlgebraTest() {

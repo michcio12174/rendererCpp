@@ -34,22 +34,20 @@ void sphereAnisotropic::hit(rayHitInfo & info)
 			return;
 		}
 		else if (t1 < info.minIntersectionDistance) {
-			vector3 intersection2 = info.incomingRay.origin + info.incomingRay.direction*t2;
-			vector3 tempNormal = intersection2 - origin;
-			tempNormal.normalize();
+			// - origin - przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
+			vector3 intersection2 = info.incomingRay.origin + info.incomingRay.direction*t2 - origin;
 
-			//przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
-			intersection2 -= origin;
+			vector3 tempNormal(intersection2);
+			tempNormal.normalize();
 
 			info.setHitAnisotropicSphere(t2, tempNormal, materialToUse, intersection2, anisotropyVector);
 		}
 		else {
-			vector3 intersection1 = info.incomingRay.origin + info.incomingRay.direction*t1;
-			vector3 tempNormal = intersection1 - origin;
-			tempNormal.normalize();
+			// - origin - przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
+			vector3 intersection1 = info.incomingRay.origin + info.incomingRay.direction*t1 - origin;
 
-			//przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
-			intersection1 -= origin;
+			vector3 tempNormal(intersection1);
+			tempNormal.normalize();
 
 			info.setHitAnisotropicSphere(t1, tempNormal, materialToUse, intersection1, anisotropyVector);
 		}

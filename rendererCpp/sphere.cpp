@@ -26,29 +26,26 @@ void sphere::hit(rayHitInfo &info)
 		delta = sqrt(delta);
 		float t1 = -b - delta;  //delta to pierwiastek, wiec zawsze dodatnia
 		float t2 = -b + delta;  //st¹d zawsze t1<t2
-		//cout << t1 << " - t1" <<endl<< t2 << " - t2" << endl;
 
 		//je¿eli t = 0 to i tak nie uznajemy przeciêcia
 		if (t2 < info.minIntersectionDistance) {
 			return;
 		}
 		else if (t1 < info.minIntersectionDistance) {
-			vector3 intersection2 = info.incomingRay.origin + info.incomingRay.direction*t2;
-			vector3 tempNormal = intersection2 - origin;
+			// - origin - przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
+			vector3 intersection2 = info.incomingRay.origin + info.incomingRay.direction*t2 - origin;
+			
+			vector3 tempNormal(intersection2);
 			tempNormal.normalize();
-
-			//przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
-			intersection2 -= origin;
-			cout << "hit" << endl;
+			
 			info.setHit(t2, tempNormal, materialToUse, intersection2);
 		}
 		else {
-			vector3 intersection1 = info.incomingRay.origin + info.incomingRay.direction*t1;
-			vector3 tempNormal = intersection1 - origin;
-			tempNormal.normalize();
+			// - origin - przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
+			vector3 intersection1 = info.incomingRay.origin + info.incomingRay.direction*t1 - origin;
 
-			//przekszta³cam globalny punkt na lokalny z pocz¹tkiem uk³adu w œrodku sfery
-			intersection1 -= origin;
+			vector3 tempNormal(intersection1);
+			tempNormal.normalize();
 
 			info.setHit(t1, tempNormal, materialToUse, intersection1);
 		}
@@ -64,11 +61,4 @@ void sphere::hit(rayHitInfo &info)
 
 		info.setHit(t, tempNormal, materialToUse, intersection);
 	}
-}
-
-vector3 sphere::getNormal(vector3 point)
-{
-	vector3 temp = point - origin;
-	temp.normalize();
-	return temp;
 }
