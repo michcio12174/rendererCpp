@@ -1,13 +1,9 @@
-Renderer sk³ada siê z dwóch czêsci - po pierwsze raytracera posiadaj¹cego miêdzy innymi:
--materia³ lustrzany
--materia³ przezroczysty
--materia³ Phonga 
--materia³ Ashikhmina-Shirleya
+Zoptymalizowany raytracer posiadajÄ…cy miÄ™dzy innymi:
+-materiaÅ‚ lustrzany
+-materiaÅ‚ przezroczysty
+-materiaÅ‚ Phonga 
+-materiaÅ‚ Ashikhmina-Shirleya
 -cieniowanie
--prymitywy takie jak sfera, p³aszczyzna, prostok¹t i trójk¹t
--kamerê perspektywiczn¹ oraz ortogonaln¹
--punktowe i kierunkowe Ÿród³a œwiat³a
-
-Druga czêœæ to rasteryzer. 
-
-Obie czêœci maj¹ czêœæ klas wspólnych - np. oœwietlenie czy trójk¹t.
+-prymitywy takie jak sfera, pÅ‚aszczyzna, prostokÄ…t i trÃ³jkÄ…t
+-kamerÄ™ perspektywicznÄ… oraz ortogonalnÄ…
+-punktowe i kierunkowe ÅºrÃ³dÅ‚a Å›wiatÅ‚a
